@@ -1,0 +1,11 @@
+glfw-devel
+ mesa-libGL-devel mesa-libEGL-devel
+ libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev
+ glew-devel SDL2-devel SDL2_image-devel glm-devel freetype-devel
+ libglvnd-opengl
+ libmesa-dev
+ mesa-libGL-devel
+ freeglut-devel
+ mesa-libGLU-devel
+ glfwf
+glad
