@@ -1,2 +1,2 @@
-glfw-devel mesa-libGL-devel mesa-libEGL-devel libglvnd-opengl mesa-libGL-devel glfw
-other (not important):glew-devel glm-devel freetype-devel freeglut-devel mesa-libGLU-devel glad SDL2-devel SDL2_image-devel
+glfw-devel mesa-libGL-devel mesa-libEGL-devel libglvnd-opengl mesa-libGL-devel glfw  glm-devel freetype-devel glad
+freeglut-devel mesa-libGLU-devel glew-devel
