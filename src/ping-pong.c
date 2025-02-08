@@ -19,7 +19,7 @@ int init();
 void processInput(GLFWwindow* window);
 void renderLoop(GLFWwindow* window);
 void drawBall();
-
+void updateProjection(GLFWwindow* window);
 
 // Function to initialize GLFW and GLAD
 int init() {
@@ -52,7 +52,25 @@ int init() {
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black
 
+    // Set the initial projection
+    updateProjection(window);
+
     return 0;
+}
+
+// Function to handle window resizing and updating the projection
+void updateProjection(GLFWwindow* window) {
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+    glViewport(0, 0, width, height);  // Set the viewport to the window size
+
+    glMatrixMode(GL_PROJECTION);    // Switch to the projection matrix
+    glLoadIdentity();               // Reset the projection matrix
+
+    // Set the aspect ratio and projection matrix
+    float aspectRatio = (float)width / (float)height;
+    glOrtho(-1.0f * aspectRatio, 1.0f * aspectRatio, -1.0f, 1.0f, -1.0f, 1.0f); // Orthographic projection
+    glMatrixMode(GL_MODELVIEW);     // Switch back to modelview matrix
 }
 
 void processInput(GLFWwindow* window) {
