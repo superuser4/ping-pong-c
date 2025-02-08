@@ -1,5 +1,7 @@
 #include "stdio.h"
 #include "stdlib.h"
+#include "math.h"
+#include "stdint.h"
 
 // 2 libraries GLAD and GLFW for OpenGL
 #include "../include/glad/glad.h"  
@@ -46,14 +48,13 @@ int init() {
         return -1;
     }
 
-    // Set OpenGL options (e.g., enable depth testing, etc.)
+    // Set OpenGL options 
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black
 
     return 0;
 }
 
-// Function to handle input (optional, modify later for actual game logic)
 void processInput(GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GLFW_TRUE); // Close the window when ESC is pressed
@@ -70,7 +71,6 @@ void renderLoop(GLFWwindow* window) {
 
         // Swap buffers
         glfwSwapBuffers(window);
-
         // Poll events (for input handling)
         glfwPollEvents();
     }
@@ -82,30 +82,33 @@ void drawBall() {
         // Set the circle parameters
         float centerX = 0.0f;
         float centerY = 0.0f;
-        float radius = 0.5f;
-        int numSegments = 100;  // The number of triangle segments to approximate the circle
+        float radius = 0.025f;
+        uint numSegments = 100;  // The number of triangle segments
 
 
         glBegin(GL_TRIANGLE_FAN);
-        glColor4f(1.0f, 1.0f, 1.0f, 0.0f); // Red color for the placeholder
-        glVertex2f(-0.1f, -0.1f);
-        glVertex2f( 0.1f, -0.1f);
-        glVertex2f( 0.1f,  0.1f);
-        glVertex2f(-0.1f,  0.1f);
+        glColor4f(1.0f, 1.0f, 1.0f, 0.0f);
+        glVertex2f(centerX,centerY);
+
+        for (uint i=0; i <= numSegments; i++) {
+            float angle = i * (2.0f * M_PI / numSegments); // Calculate the angle for each segment
+            float x = centerX + radius * cos(angle);
+            float y = centerY + radius * sin(angle);
+            glVertex2f(x, y);  // Draw the point
+        }
+        
         glEnd();
+        glFlush();
 }
 
 int main() {
-    // Initialize GLFW and GLAD
     if (init() != 0) {
         return -1;
     }
 
-    // Create GLFW window and run rendering loop
     GLFWwindow* window = glfwGetCurrentContext();
     renderLoop(window);
 
-    // Clean up and close
     glfwDestroyWindow(window);
     glfwTerminate();
 
