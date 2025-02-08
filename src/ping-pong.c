@@ -1,6 +1,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 
+// 2 libraries GLAD and GLFW for OpenGL
 #include "../include/glad/glad.h"  
 #include "/usr/include/GLFW/glfw3.h"
 #include "/usr/include/GL/gl.h"
@@ -10,6 +11,13 @@
 // Window dimensions
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
+
+// function signs
+int init();
+void processInput(GLFWwindow* window);
+void renderLoop(GLFWwindow* window);
+void drawBall();
+
 
 // Function to initialize GLFW and GLAD
 int init() {
@@ -58,18 +66,7 @@ void renderLoop(GLFWwindow* window) {
         // Input processing
         processInput(window);
 
-        // Rendering commands
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the screen
-
-        // Placeholder for rendering (e.g., drawing paddles and ball here)
-        // Example: Draw a simple rectangle (paddle or ball placeholder)
-        glBegin(GL_QUADS);
-            glColor3f(1.0f, 0.0f, 0.0f); // Red color for the placeholder
-            glVertex2f(-0.1f, -0.1f);
-            glVertex2f( 0.1f, -0.1f);
-            glVertex2f( 0.1f,  0.1f);
-            glVertex2f(-0.1f,  0.1f);
-        glEnd();
+        drawBall();
 
         // Swap buffers
         glfwSwapBuffers(window);
@@ -77,6 +74,25 @@ void renderLoop(GLFWwindow* window) {
         // Poll events (for input handling)
         glfwPollEvents();
     }
+}
+
+void drawBall() {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the screen
+
+        // Set the circle parameters
+        float centerX = 0.0f;
+        float centerY = 0.0f;
+        float radius = 0.5f;
+        int numSegments = 100;  // The number of triangle segments to approximate the circle
+
+
+        glBegin(GL_TRIANGLE_FAN);
+        glColor4f(1.0f, 1.0f, 1.0f, 0.0f); // Red color for the placeholder
+        glVertex2f(-0.1f, -0.1f);
+        glVertex2f( 0.1f, -0.1f);
+        glVertex2f( 0.1f,  0.1f);
+        glVertex2f(-0.1f,  0.1f);
+        glEnd();
 }
 
 int main() {
