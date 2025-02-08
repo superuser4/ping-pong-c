@@ -1,7 +1,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-#include "glad/glad.h"  
+#include "../include/glad/glad.h"  
 #include "/usr/include/GLFW/glfw3.h"
 #include "/usr/include/GL/gl.h"
 // #include "/usr/include/GL/glu.h"
