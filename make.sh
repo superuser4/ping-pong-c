@@ -1,3 +1,3 @@
 #!/bin/bash
 
-gcc -Wall -Wpedantic -g3 -lm -lglfw  -lGL -lX11 -lpthread -lXrandr -lXi -ldl  -o pong ping-pong.c
+gcc -Wall -Wpedantic -Wextra -Werror -g3 -lGL -lglfw -o pong ping-pong.c
