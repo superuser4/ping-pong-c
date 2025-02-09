@@ -32,9 +32,6 @@ const int WINDOW_HEIGHT = 600;
 void drawBall(int BALL_X, int BALL_Y) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the screen
 
-    //Set the circle parameters
-    // float centerX = 0.0f;
-    // float centerY = 0.0f;
     float radius = 0.025f;
     uint numSegments = 100;  // The number of triangle segments
 
@@ -53,12 +50,9 @@ void drawBall(int BALL_X, int BALL_Y) {
     glEnd();
     glFlush();
 }
-void ballReset(){}
-void UpdateBall(){}
 
 // player and paddle logic
 void drawPaddle(int PADDLE_X, int PADDLE_Y){}
-void updatePaddle(){}
 
 
 // Function to initialize GLFW and GLAD
@@ -125,47 +119,50 @@ void processInput(GLFWwindow* window) {
     }
 }
 
-// Main rendering loop
 void renderLoop(GLFWwindow* window) {
-    // ball, default numbers in the middle
     float BALL_X = 0.0f;
     float BALL_Y = 0.0f;
 
-    float BALL_XSPEED = 0.005f;
-    float BALL_YSPEED = 0.005f;
+    float BALL_XSPEED = 0.03f;
+    float BALL_YSPEED = 0.03f;
 
-    // paddles
-    int PADDLE_WIDTH = 10;
-    int PADDLE_HEIGHT = 100;
+    double lastTime = glfwGetTime();
+    glfwSwapInterval(0);  // Disable V-Sync (60 FPS)
 
-    float PADDLE1_X = 20;
-    float PADDLE1_Y = WINDOW_HEIGHT / (PADDLE_HEIGHT / 2) + 300;
-
-    float PADDLE_2X = WINDOW_WIDTH - 30;
-    float PADDLE_2Y = WINDOW_HEIGHT / (PADDLE_HEIGHT / 2) + 300;
-
-    float PADDLE_SPEED = 5;
 
     while (!glfwWindowShouldClose(window)) {
-        // Input processing
         processInput(window);
 
-        // test to see if I can move the ball
-        BALL_X += BALL_XSPEED;
-        BALL_Y += BALL_YSPEED;
+        double currentTime = glfwGetTime();
+        float deltaTime = (float)(currentTime - lastTime);
+        lastTime = currentTime;
 
-        // Check if ball is going out of bounds
-        if ((BALL_Y >= WINDOW_HEIGHT) || (BALL_Y <= 0)) {
+
+        BALL_X += BALL_XSPEED * deltaTime;
+        BALL_Y += BALL_YSPEED * deltaTime;
+
+        // Side boundaries (reset ball position)
+        if (BALL_X + 0.025f >= WINDOW_WIDTH || BALL_X - 0.025f <= 0) {
+            BALL_X = 0.0f;
+            BALL_Y = 0.0f;
+        }
+        // Top and bottom boundaries (bounce)
+        if (BALL_Y + 0.025f >= WINDOW_HEIGHT) {
+            BALL_Y = WINDOW_HEIGHT - 0.025f;
             BALL_YSPEED = -BALL_YSPEED;
         }
-        
+        if (BALL_Y - 0.025f <= 0) {
+            BALL_Y = 0.025f;
+            BALL_YSPEED = -BALL_YSPEED;
+        }
+
         drawBall(BALL_X, BALL_Y);
-        // Swap buffers
         glfwSwapBuffers(window);
-        // Poll events (for input handling)
         glfwPollEvents();
     }
 }
+
+
 
 
 int main() {
