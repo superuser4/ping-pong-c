@@ -131,8 +131,8 @@ void renderLoop(GLFWwindow* window) {
     float BALL_X = 0.0f;
     float BALL_Y = 0.0f;
 
-    int BALL_XSPEED = 5;
-    int BALL_YSPEED = 5;
+    float BALL_XSPEED = 0.005f;
+    float BALL_YSPEED = 0.005f;
 
     // paddles
     int PADDLE_WIDTH = 10;
@@ -144,17 +144,22 @@ void renderLoop(GLFWwindow* window) {
     float PADDLE_2X = WINDOW_WIDTH - 30;
     float PADDLE_2Y = WINDOW_HEIGHT / (PADDLE_HEIGHT / 2) + 300;
 
-    int PADDLE_SPEED = 5;
+    float PADDLE_SPEED = 5;
 
     while (!glfwWindowShouldClose(window)) {
         // Input processing
         processInput(window);
 
-        drawBall(BALL_X, BALL_Y);
         // test to see if I can move the ball
         BALL_X += BALL_XSPEED;
         BALL_Y += BALL_YSPEED;
 
+        // Check if ball is going out of bounds
+        if ((BALL_Y >= WINDOW_HEIGHT) || (BALL_Y <= 0)) {
+            BALL_YSPEED = -BALL_YSPEED;
+        }
+        
+        drawBall(BALL_X, BALL_Y);
         // Swap buffers
         glfwSwapBuffers(window);
         // Poll events (for input handling)
