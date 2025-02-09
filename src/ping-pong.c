@@ -25,8 +25,8 @@ void drawPaddle(int PADDLE_X, int PADDLE_Y);
 
 
 // Window dimensions
-const int WINDOW_WIDTH = 800;
-const int WINDOW_HEIGHT = 600;
+const float WINDOW_WIDTH = 800;
+const float WINDOW_HEIGHT = 600;
 
 // ball logic
 void drawBall(int BALL_X, int BALL_Y) {
@@ -125,24 +125,16 @@ void renderLoop(GLFWwindow* window) {
 
     float BALL_XSPEED = 0.03f;
     float BALL_YSPEED = 0.03f;
-
-    double lastTime = glfwGetTime();
-    glfwSwapInterval(0);  // Disable V-Sync (60 FPS)
-
-
+    float BALL_RADIUS = 0.025f;
+    
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
 
-        double currentTime = glfwGetTime();
-        float deltaTime = (float)(currentTime - lastTime);
-        lastTime = currentTime;
-
-
-        BALL_X += BALL_XSPEED * deltaTime;
-        BALL_Y += BALL_YSPEED * deltaTime;
+        BALL_X += BALL_XSPEED;
+        BALL_Y += BALL_YSPEED;
 
         // Side boundaries (reset ball position)
-        if (BALL_X + 0.025f >= WINDOW_WIDTH || BALL_X - 0.025f <= 0) {
+        if (BALL_X + BALL_RADIUS >= WINDOW_WIDTH || BALL_X - 0.025f <= 0) {
             BALL_X = 0.0f;
             BALL_Y = 0.0f;
         }
