@@ -23,8 +23,8 @@ void drawPaddle(float PADDLE_X, float PADDLE_Y);
 
 
 // Window dimensions
-const float WINDOW_WIDTH = 800;
-const float WINDOW_HEIGHT = 600;
+const float WINDOW_WIDTH = 1280;
+const float WINDOW_HEIGHT = 720;
 
 // ball logic
 void drawBall(float BALL_X, float BALL_Y) {
@@ -121,13 +121,17 @@ void renderLoop(GLFWwindow* window) {
     float BALL_X = 0.0f;
     float BALL_Y = 0.0f;
 
-    float BALL_XSPEED = 0.03f;
-    float BALL_YSPEED = 0.03f;
+    float BALL_XSPEED = 0.0075f;
+    float BALL_YSPEED = 0.0075f;
     float BALL_RADIUS = 0.025f;
     
     int width, height;
-    glfwGetFramebufferSize(window, &width, &height);  // Get the actual window size
+    glfwGetFramebufferSize(window, &width, &height);
     float aspectRatio = (float)width / (float)height;
+    float rightBoundary = aspectRatio;
+    float leftBoundary = -aspectRatio;
+    float topBoundary = 1.0f;
+    float bottomBoundary = -1.0f;
     
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
@@ -136,17 +140,20 @@ void renderLoop(GLFWwindow* window) {
         BALL_Y += BALL_YSPEED;
 
         // Side boundaries (reset ball position)
-        if (BALL_X + BALL_RADIUS >= WINDOW_WIDTH || BALL_X - BALL_RADIUS <= 0) {
+        if (BALL_X + BALL_RADIUS >= rightBoundary || BALL_X - BALL_RADIUS <= leftBoundary) {
             BALL_X = 0.0f;
             BALL_Y = 0.0f;
-        }
-        // Top and bottom boundaries (bounce)
-        if (BALL_Y + BALL_RADIUS >= WINDOW_HEIGHT) {
-            BALL_Y = height - BALL_RADIUS;
+            BALL_XSPEED = -BALL_XSPEED;
             BALL_YSPEED = -BALL_YSPEED;
         }
-        if (BALL_Y- BALL_RADIUS <= 0) {
-            BALL_Y = BALL_RADIUS;
+        // Top boundary (bounce)
+        if (BALL_Y + BALL_RADIUS >= topBoundary) {
+            BALL_Y = topBoundary - BALL_RADIUS;
+            BALL_YSPEED = -BALL_YSPEED;
+        }
+        // Bottom boundary (bounce)
+        if (BALL_Y - BALL_RADIUS <= bottomBoundary) {
+            BALL_Y = bottomBoundary + BALL_RADIUS;
             BALL_YSPEED = -BALL_YSPEED;
         }
         
