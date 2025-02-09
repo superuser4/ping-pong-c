@@ -159,8 +159,8 @@ void renderLoop(GLFWwindow* window) {
     float BALL_X = 0.0f;
     float BALL_Y = 0.0f;
 
-    float BALL_XSPEED = 0.0075f;
-    float BALL_YSPEED = 0.0075f;
+    float BALL_XSPEED = 0.0175f;
+    float BALL_YSPEED = 0.0175f;
     const float BALL_RADIUS = 0.025f;
 
     // Screen
@@ -182,18 +182,30 @@ void renderLoop(GLFWwindow* window) {
     const float PADDLE_2X = 1.74f; //constant
     float PADDLE_2Y = 0.0f;
 
-    const float PADDLE_SPEED = 0.01f;
+    const float PADDLE_SPEED = 0.03f;
 
     // Score
     uint scoreP1 = 0;
     uint scoreP2 = 0;
     
     // fps
-    //glfwSwapInterval(1);
+    float dt = 0.0f;  // Time between current frame and last frame
+    float lastFrame = 0.0f;  // Time of the last frame
+    glfwSwapInterval(1);  // 1 enables V-Sync, 0 disables V-Sync
+    const float targetFPS = 60.0f;
+    const float frameTime = 1.0f / targetFPS;  // Time per frame in seconds
+
+
 
     while (!glfwWindowShouldClose(window)) {
+        float startTime = glfwGetTime();
         processInput(window, &PADDLE_1Y, &PADDLE_2Y, PADDLE_SPEED);
-
+        
+        // Calculate deltaTime
+        float currentFrame = glfwGetTime();
+        dt = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        
         BALL_X += BALL_XSPEED;
         BALL_Y += BALL_YSPEED;
 
@@ -241,6 +253,11 @@ void renderLoop(GLFWwindow* window) {
         drawPaddle(PADDLE_2X, PADDLE_2Y);
         glfwSwapBuffers(window);
         glfwPollEvents();
+        // Limit the frame rate by waiting until the next frame
+        float elapsedTime = glfwGetTime() - startTime;
+        if (elapsedTime < frameTime) {
+            glfwWaitEventsTimeout(frameTime - elapsedTime);  // Wait for the remaining time
+        }
     }
 }
 
@@ -259,4 +276,3 @@ int main() {
 }
 
 // SCORING has to be handled
-// BALL GETS SLOWER OVER TIME?? FPS LAG?? CHOPPYNYESS< DELTA TIME!!
