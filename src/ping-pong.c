@@ -2,6 +2,7 @@
 #include "stdlib.h"
 #include "math.h"
 #include "stdint.h"
+#include "unistd.h"
 
 
 // 2 libraries GLAD and GLFW for OpenGL
@@ -15,13 +16,10 @@
 int init();
 void processInput(GLFWwindow* window);
 void renderLoop(GLFWwindow* window);
-void drawBall();
+void drawBall(float BALL_X, float BALL_Y);
 void updateProjection(GLFWwindow* window);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void updatePaddle();
-void ballReset();
-void UpdateBall();
-void drawPaddle(int PADDLE_X, int PADDLE_Y);
+void drawPaddle(float PADDLE_X, float PADDLE_Y);
 
 
 // Window dimensions
@@ -29,7 +27,7 @@ const float WINDOW_WIDTH = 800;
 const float WINDOW_HEIGHT = 600;
 
 // ball logic
-void drawBall(int BALL_X, int BALL_Y) {
+void drawBall(float BALL_X, float BALL_Y) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the screen
 
     float radius = 0.025f;
@@ -52,7 +50,7 @@ void drawBall(int BALL_X, int BALL_Y) {
 }
 
 // player and paddle logic
-void drawPaddle(int PADDLE_X, int PADDLE_Y){}
+void drawPaddle(float PADDLE_X, float PADDLE_Y){}
 
 
 // Function to initialize GLFW and GLAD
@@ -127,6 +125,10 @@ void renderLoop(GLFWwindow* window) {
     float BALL_YSPEED = 0.03f;
     float BALL_RADIUS = 0.025f;
     
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);  // Get the actual window size
+    float aspectRatio = (float)width / (float)height;
+    
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
 
@@ -134,28 +136,25 @@ void renderLoop(GLFWwindow* window) {
         BALL_Y += BALL_YSPEED;
 
         // Side boundaries (reset ball position)
-        if (BALL_X + BALL_RADIUS >= WINDOW_WIDTH || BALL_X - 0.025f <= 0) {
+        if (BALL_X + BALL_RADIUS >= WINDOW_WIDTH || BALL_X - BALL_RADIUS <= 0) {
             BALL_X = 0.0f;
             BALL_Y = 0.0f;
         }
         // Top and bottom boundaries (bounce)
-        if (BALL_Y + 0.025f >= WINDOW_HEIGHT) {
-            BALL_Y = WINDOW_HEIGHT - 0.025f;
+        if (BALL_Y + BALL_RADIUS >= WINDOW_HEIGHT) {
+            BALL_Y = height - BALL_RADIUS;
             BALL_YSPEED = -BALL_YSPEED;
         }
-        if (BALL_Y - 0.025f <= 0) {
-            BALL_Y = 0.025f;
+        if (BALL_Y- BALL_RADIUS <= 0) {
+            BALL_Y = BALL_RADIUS;
             BALL_YSPEED = -BALL_YSPEED;
         }
-
+        
         drawBall(BALL_X, BALL_Y);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 }
-
-
-
 
 int main() {
     if (init() != 0) {
