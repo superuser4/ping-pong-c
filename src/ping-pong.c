@@ -50,7 +50,23 @@ void drawBall(float BALL_X, float BALL_Y) {
 }
 
 // player and paddle logic
-void drawPaddle(float PADDLE_X, float PADDLE_Y){}
+void drawPaddle(float PADDLE_X, float PADDLE_Y){
+    glLoadIdentity();
+
+    float PADDLE_HEIGHT = 0.30;
+    float PADDLE_WIDTH = 0.03;
+
+    glColor4f(1.0f, 1.0f, 1.0f, 0.0f);
+    glBegin(GL_QUADS);
+    
+    glVertex2f(PADDLE_X, PADDLE_Y);
+    glVertex2f(PADDLE_X+PADDLE_WIDTH, PADDLE_Y);
+    glVertex2f(PADDLE_X + PADDLE_WIDTH,PADDLE_Y+PADDLE_HEIGHT);
+    glVertex2f(PADDLE_X, PADDLE_Y+PADDLE_HEIGHT);
+
+    glEnd();
+    glFlush();
+}
 
 
 // Function to initialize GLFW and GLAD
@@ -118,13 +134,15 @@ void processInput(GLFWwindow* window) {
 }
 
 void renderLoop(GLFWwindow* window) {
+    // Balll
     float BALL_X = 0.0f;
     float BALL_Y = 0.0f;
 
     float BALL_XSPEED = 0.0075f;
     float BALL_YSPEED = 0.0075f;
-    float BALL_RADIUS = 0.025f;
-    
+    const float BALL_RADIUS = 0.025f;
+
+    // Screen
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
     float aspectRatio = (float)width / (float)height;
@@ -132,6 +150,16 @@ void renderLoop(GLFWwindow* window) {
     float leftBoundary = -aspectRatio;
     float topBoundary = 1.0f;
     float bottomBoundary = -1.0f;
+
+     // Paddles
+
+    const float PADDLE_1X = -1.77f; // constant
+    float PADDLE_1Y = 0.0f;
+
+    const float PADDLE_2X = 1.74f; //constant
+    float PADDLE_2Y = 0.0f;
+
+    const float PADDLE_SPEED = 0.01f;
     
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
@@ -139,8 +167,16 @@ void renderLoop(GLFWwindow* window) {
         BALL_X += BALL_XSPEED;
         BALL_Y += BALL_YSPEED;
 
+        // Ball collision with paddles, make sure to check with radius added 
+
+
         // Side boundaries (reset ball position)
-        if (BALL_X + BALL_RADIUS >= rightBoundary || BALL_X - BALL_RADIUS <= leftBoundary) {
+        if (BALL_X + BALL_RADIUS >= rightBoundary) {
+            BALL_X = 0.0f;
+            BALL_Y = 0.0f;
+            BALL_XSPEED = -BALL_XSPEED;
+            BALL_YSPEED = -BALL_YSPEED;
+        } else if ( BALL_X - BALL_RADIUS <= leftBoundary) {
             BALL_X = 0.0f;
             BALL_Y = 0.0f;
             BALL_XSPEED = -BALL_XSPEED;
@@ -158,6 +194,8 @@ void renderLoop(GLFWwindow* window) {
         }
         
         drawBall(BALL_X, BALL_Y);
+        drawPaddle(PADDLE_1X, PADDLE_1Y);
+        drawPaddle(PADDLE_2X, PADDLE_2Y);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -176,3 +214,6 @@ int main() {
 
     return 0;
 }
+
+// INPUT HANDLING
+// SCORING
