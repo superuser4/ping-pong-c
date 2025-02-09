@@ -274,5 +274,3 @@ int main() {
 
     return 0;
 }
-
-// SCORING has to be handled
