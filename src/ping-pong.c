@@ -132,17 +132,25 @@ void processInput(GLFWwindow* window, float *PADDLE_1Y, float *PADDLE_2Y, float 
         glfwSetWindowShouldClose(window, GLFW_TRUE); // Close the window when ESC is pressed
     }
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-        *PADDLE_2Y += PADDLE_SPEED;
+        if (*PADDLE_2Y < 0.7f) {
+            *PADDLE_2Y += PADDLE_SPEED;
+        }
     }
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-        *PADDLE_2Y -= PADDLE_SPEED;
+        if (*PADDLE_2Y > -1.0f) {
+            *PADDLE_2Y -= PADDLE_SPEED;
+        }
     }
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        *PADDLE_1Y += PADDLE_SPEED;
+        if (*PADDLE_1Y < 0.7f) {
+            *PADDLE_1Y += PADDLE_SPEED;
+        }
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        *PADDLE_1Y -= PADDLE_SPEED;
+        if (*PADDLE_1Y > -1.0f) {
+            *PADDLE_1Y -= PADDLE_SPEED;
+        }
     }
 }
 
@@ -180,6 +188,9 @@ void renderLoop(GLFWwindow* window) {
     uint scoreP1 = 0;
     uint scoreP2 = 0;
     
+    // fps
+    //glfwSwapInterval(1);
+
     while (!glfwWindowShouldClose(window)) {
         processInput(window, &PADDLE_1Y, &PADDLE_2Y, PADDLE_SPEED);
 
@@ -247,5 +258,5 @@ int main() {
     return 0;
 }
 
-// SCORING
-// BALL GETS SLOWER OVER TIME??
+// SCORING has to be handled
+// BALL GETS SLOWER OVER TIME?? FPS LAG?? CHOPPYNYESS< DELTA TIME!!
