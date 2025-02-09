@@ -1,3 +1,3 @@
 #!/bin/bash
 
-gcc -Wall -Wextra -g3 -lGL -lglfw -lm -o pong src/ping-pong.c src/glad.c src/ball.c src/player.c
+gcc -Wall -Wextra -g3 -lGL -lglfw -lm -o pong src/ping-pong.c src/glad.c
