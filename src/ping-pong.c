@@ -183,7 +183,7 @@ void renderLoop(GLFWwindow* window) {
         BALL_Y += BALL_YSPEED;
 
         // Ball collision with paddles
-
+        
 
         // Side boundaries (reset ball position)
         if (BALL_X + BALL_RADIUS >= rightBoundary) {
