@@ -14,7 +14,7 @@
 
 // function signatures
 int init();
-void processInput(GLFWwindow* window);
+void processInput(GLFWwindow* window, float *PADDLE_1Y, float *PADDLE_2Y, float PADDLE_SPEED);
 void renderLoop(GLFWwindow* window);
 void drawBall(float BALL_X, float BALL_Y);
 void updateProjection(GLFWwindow* window);
@@ -127,9 +127,22 @@ void updateProjection(GLFWwindow* window) {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  
 }
 
-void processInput(GLFWwindow* window) {
+void processInput(GLFWwindow* window, float *PADDLE_1Y, float *PADDLE_2Y, float PADDLE_SPEED) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GLFW_TRUE); // Close the window when ESC is pressed
+    }
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+        *PADDLE_2Y += PADDLE_SPEED;
+    }
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+        *PADDLE_2Y -= PADDLE_SPEED;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+        *PADDLE_1Y += PADDLE_SPEED;
+    }
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+        *PADDLE_1Y -= PADDLE_SPEED;
     }
 }
 
@@ -152,6 +165,8 @@ void renderLoop(GLFWwindow* window) {
     float bottomBoundary = -1.0f;
 
      // Paddles
+    float PADDLE_HEIGHT = 0.30;
+    float PADDLE_WIDTH = 0.03;
 
     const float PADDLE_1X = -1.77f; // constant
     float PADDLE_1Y = 0.0f;
@@ -162,12 +177,12 @@ void renderLoop(GLFWwindow* window) {
     const float PADDLE_SPEED = 0.01f;
     
     while (!glfwWindowShouldClose(window)) {
-        processInput(window);
+        processInput(window, &PADDLE_1Y, &PADDLE_2Y, PADDLE_SPEED);
 
         BALL_X += BALL_XSPEED;
         BALL_Y += BALL_YSPEED;
 
-        // Ball collision with paddles, make sure to check with radius added 
+        // Ball collision with paddles
 
 
         // Side boundaries (reset ball position)
@@ -215,5 +230,5 @@ int main() {
     return 0;
 }
 
-// INPUT HANDLING
+// COLLISION DETECTION WITH PADDLES
 // SCORING
