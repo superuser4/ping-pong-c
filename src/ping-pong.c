@@ -175,6 +175,10 @@ void renderLoop(GLFWwindow* window) {
     float PADDLE_2Y = 0.0f;
 
     const float PADDLE_SPEED = 0.01f;
+
+    // Score
+    uint scoreP1 = 0;
+    uint scoreP2 = 0;
     
     while (!glfwWindowShouldClose(window)) {
         processInput(window, &PADDLE_1Y, &PADDLE_2Y, PADDLE_SPEED);
@@ -183,15 +187,28 @@ void renderLoop(GLFWwindow* window) {
         BALL_Y += BALL_YSPEED;
 
         // Ball collision with paddles
-        
+        // Left Paddle
+        if ((BALL_X - BALL_RADIUS <= PADDLE_1X + PADDLE_WIDTH) && (BALL_XSPEED < 0)) {
+            if ((BALL_Y + BALL_RADIUS >= PADDLE_1Y) && (BALL_Y - BALL_RADIUS <= PADDLE_1Y + PADDLE_HEIGHT)) {
+                BALL_XSPEED = -BALL_XSPEED;
+            }
+        }
+        // Right Paddle
+        if ((BALL_X + BALL_RADIUS >= PADDLE_2X) && (BALL_XSPEED > 0)) {
+            if ((BALL_Y + BALL_RADIUS >= PADDLE_2Y) && (BALL_Y - BALL_RADIUS <= PADDLE_2Y + PADDLE_HEIGHT)) {
+                BALL_XSPEED = -BALL_XSPEED;
+            }
+        }
 
         // Side boundaries (reset ball position)
         if (BALL_X + BALL_RADIUS >= rightBoundary) {
+            scoreP1++;
             BALL_X = 0.0f;
             BALL_Y = 0.0f;
             BALL_XSPEED = -BALL_XSPEED;
             BALL_YSPEED = -BALL_YSPEED;
         } else if ( BALL_X - BALL_RADIUS <= leftBoundary) {
+            scoreP2++;
             BALL_X = 0.0f;
             BALL_Y = 0.0f;
             BALL_XSPEED = -BALL_XSPEED;
@@ -230,5 +247,5 @@ int main() {
     return 0;
 }
 
-// COLLISION DETECTION WITH PADDLES
 // SCORING
+// BALL GETS SLOWER OVER TIME??
