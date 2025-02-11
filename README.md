@@ -1,2 +1,3 @@
 # ping-pong-c
-ping pong game written in C
+Ping Pong game written in C
+![screenshot](img/works.png)
