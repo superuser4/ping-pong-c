@@ -10,7 +10,7 @@
 #include "/usr/include/GLFW/glfw3.h"
 #include "/usr/include/GL/gl.h"
 // #include "/usr/include/GL/glu.h"
-// #include "/usr/include/GL/glut.h"
+#include "/usr/include/GL/glut.h"
 
 // function signatures
 int init();
@@ -20,6 +20,7 @@ void drawBall(float BALL_X, float BALL_Y);
 void updateProjection(GLFWwindow* window);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void drawPaddle(float PADDLE_X, float PADDLE_Y);
+void renderScore(int scoreP1, int scoreP2);
 
 
 // Window dimensions
@@ -154,6 +155,32 @@ void processInput(GLFWwindow* window, float *PADDLE_1Y, float *PADDLE_2Y, float 
     }
 }
 
+// Function to render the score on the screen
+void renderScore(int scoreP1, int scoreP2) {
+    glColor3f(1.0f, 1.0f, 1.0f);
+
+    // Display Player 1's score
+    glPushMatrix();
+    glRasterPos2f(-0.6f, 0.9f); // Position the score near the top left
+    char score1[5];
+    snprintf(score1, 5, "%d", scoreP1); // Convert score to string
+    for (int i = 0; score1[i] != '\0'; i++) {
+        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, score1[i]);
+    }
+    glPopMatrix();
+
+    // Display Player 2's score
+    glPushMatrix();
+    glRasterPos2f(0.5f, 0.9f); // Position the score near the top right
+    char score2[5];
+    snprintf(score2, 5, "%d", scoreP2); // Convert score to string
+    for (int i = 0; score2[i] != '\0'; i++) {
+        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, score2[i]);
+    }
+    glPopMatrix();
+}
+
+
 void renderLoop(GLFWwindow* window) {
     // Balll
     float BALL_X = 0.0f;
@@ -251,6 +278,9 @@ void renderLoop(GLFWwindow* window) {
         drawBall(BALL_X, BALL_Y);
         drawPaddle(PADDLE_1X, PADDLE_1Y);
         drawPaddle(PADDLE_2X, PADDLE_2Y);
+
+        renderScore(scoreP1, scoreP2);
+
         glfwSwapBuffers(window);
         glfwPollEvents();
         // Limit the frame rate by waiting until the next frame
@@ -265,6 +295,13 @@ int main() {
     if (init() != 0) {
         return -1;
     }
+
+    // Initialize GLUT for rendering text
+    int argc = 1;
+    char* argv[1] = {(char*)"Pong"};
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);  // Set display mode for GLUT (for text rendering));
+
 
     GLFWwindow* window = glfwGetCurrentContext();
     renderLoop(window);
