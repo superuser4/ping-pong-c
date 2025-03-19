@@ -23,16 +23,15 @@ void drawPaddle(float PADDLE_X, float PADDLE_Y);
 void renderScore(int scoreP1, int scoreP2);
 
 
-// Window dimensions
 const float WINDOW_WIDTH = 1280;
 const float WINDOW_HEIGHT = 720;
 
-// ball logic
+
 void drawBall(float BALL_X, float BALL_Y) {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the screen
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     float radius = 0.025f;
-    uint numSegments = 100;  // The number of triangle segments
+    uint numSegments = 100;
 
 
     glBegin(GL_TRIANGLE_FAN);
@@ -40,17 +39,17 @@ void drawBall(float BALL_X, float BALL_Y) {
     glVertex2f(BALL_X,BALL_Y);
 
     for (uint i=0; i <= numSegments; i++) {
-        float angle = i * (2.0f * M_PI / numSegments); // Calculate the angle for each segment
+        float angle = i * (2.0f * M_PI / numSegments);
         float x = BALL_X + radius * cos(angle);
         float y = BALL_Y+ radius * sin(angle);
-        glVertex2f(x, y);  // Draw the point
+        glVertex2f(x, y); 
     }
     
     glEnd();
     glFlush();
 }
 
-// player and paddle logic
+
 void drawPaddle(float PADDLE_X, float PADDLE_Y){
     glLoadIdentity();
 
@@ -70,15 +69,15 @@ void drawPaddle(float PADDLE_X, float PADDLE_Y){
 }
 
 
-// Function to initialize GLFW and GLAD
+
 int init() {
-    // Initialize GLFW
+  
     if (!glfwInit()) {
         fprintf(stderr, "Failed to initialize GLFW\n");
         return -1;
     }
 
-    // Create GLFW window
+  
     GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Ping Pong Game", NULL, NULL);
     if (!window) {
         fprintf(stderr, "Failed to create GLFW window\n");
@@ -86,10 +85,10 @@ int init() {
         return -1;
     }
 
-    // Make OpenGL context current
+
     glfwMakeContextCurrent(window);
 
-    // Load GLAD
+
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         fprintf(stderr, "Failed to initialize GLAD\n");
         glfwDestroyWindow(window);
@@ -97,11 +96,11 @@ int init() {
         return -1;
     }
 
-    // Set OpenGL options 
-    glEnable(GL_DEPTH_TEST);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black
 
-    // Set the initial projection
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+
     updateProjection(window);
 
     return 0;
@@ -112,25 +111,24 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height){
     glViewport(0, 0, width, height);
 }
 
-// Function to handle window resizing and updating the projection
+
 void updateProjection(GLFWwindow* window) {
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
-    glViewport(0, 0, width, height);  // Set the viewport to the window size
+    glViewport(0, 0, width, height);
 
-    glMatrixMode(GL_PROJECTION);    // Switch to the projection matrix
-    glLoadIdentity();               // Reset the projection matrix
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
 
-    // Set the aspect ratio and projection matrix
     float aspectRatio = (float)width / (float)height;
-    glOrtho(-1.0f * aspectRatio, 1.0f * aspectRatio, -1.0f, 1.0f, -1.0f, 1.0f); // Orthographic projection
-    glMatrixMode(GL_MODELVIEW);     // Switch back to modelview matrix
+    glOrtho(-1.0f * aspectRatio, 1.0f * aspectRatio, -1.0f, 1.0f, -1.0f, 1.0f);
+    glMatrixMode(GL_MODELVIEW);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  
 }
 
 void processInput(GLFWwindow* window, float *PADDLE_1Y, float *PADDLE_2Y, float PADDLE_SPEED) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, GLFW_TRUE); // Close the window when ESC is pressed
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
         if (*PADDLE_2Y < 0.7f) {
@@ -155,25 +153,25 @@ void processInput(GLFWwindow* window, float *PADDLE_1Y, float *PADDLE_2Y, float 
     }
 }
 
-// Function to render the score on the screen
+
 void renderScore(int scoreP1, int scoreP2) {
     glColor3f(1.0f, 1.0f, 1.0f);
 
-    // Display Player 1's score
+
     glPushMatrix();
-    glRasterPos2f(-0.6f, 0.9f); // Position the score near the top left
+    glRasterPos2f(-0.6f, 0.9f);
     char score1[5];
-    snprintf(score1, 5, "%d", scoreP1); // Convert score to string
+    snprintf(score1, 5, "%d", scoreP1);
     for (int i = 0; score1[i] != '\0'; i++) {
         glutBitmapCharacter(GLUT_BITMAP_9_BY_15, score1[i]);
     }
     glPopMatrix();
 
-    // Display Player 2's score
+
     glPushMatrix();
-    glRasterPos2f(0.5f, 0.9f); // Position the score near the top right
+    glRasterPos2f(0.5f, 0.9f);
     char score2[5];
-    snprintf(score2, 5, "%d", scoreP2); // Convert score to string
+    snprintf(score2, 5, "%d", scoreP2);
     for (int i = 0; score2[i] != '\0'; i++) {
         glutBitmapCharacter(GLUT_BITMAP_9_BY_15, score2[i]);
     }
@@ -182,7 +180,7 @@ void renderScore(int scoreP1, int scoreP2) {
 
 
 void renderLoop(GLFWwindow* window) {
-    // Balll
+
     float BALL_X = 0.0f;
     float BALL_Y = 0.0f;
 
@@ -190,7 +188,7 @@ void renderLoop(GLFWwindow* window) {
     float BALL_YSPEED = 0.0175f;
     const float BALL_RADIUS = 0.025f;
 
-    // Screen
+
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
     float aspectRatio = (float)width / (float)height;
@@ -199,28 +197,26 @@ void renderLoop(GLFWwindow* window) {
     float topBoundary = 1.0f;
     float bottomBoundary = -1.0f;
 
-     // Paddles
+
     float PADDLE_HEIGHT = 0.30;
     float PADDLE_WIDTH = 0.03;
 
-    const float PADDLE_1X = -1.77f; // constant
+    const float PADDLE_1X = -1.77f;
     float PADDLE_1Y = 0.0f;
 
-    const float PADDLE_2X = 1.74f; //constant
+    const float PADDLE_2X = 1.74f;
     float PADDLE_2Y = 0.0f;
 
     const float PADDLE_SPEED = 0.03f;
 
-    // Score
     uint scoreP1 = 0;
     uint scoreP2 = 0;
     
-    // fps
-    float dt = 0.0f;  // Time between current frame and last frame
-    float lastFrame = 0.0f;  // Time of the last frame
-    glfwSwapInterval(1);  // 1 enables V-Sync, 0 disables V-Sync
+    float dt = 0.0f;
+    float lastFrame = 0.0f;
+    glfwSwapInterval(1);
     const float targetFPS = 60.0f;
-    const float frameTime = 1.0f / targetFPS;  // Time per frame in seconds
+    const float frameTime = 1.0f / targetFPS;
 
 
 
@@ -228,7 +224,7 @@ void renderLoop(GLFWwindow* window) {
         float startTime = glfwGetTime();
         processInput(window, &PADDLE_1Y, &PADDLE_2Y, PADDLE_SPEED);
         
-        // Calculate deltaTime
+
         float currentFrame = glfwGetTime();
         dt = currentFrame - lastFrame;
         lastFrame = currentFrame;
@@ -236,21 +232,20 @@ void renderLoop(GLFWwindow* window) {
         BALL_X += BALL_XSPEED;
         BALL_Y += BALL_YSPEED;
 
-        // Ball collision with paddles
-        // Left Paddle
+
         if ((BALL_X - BALL_RADIUS <= PADDLE_1X + PADDLE_WIDTH) && (BALL_XSPEED < 0)) {
             if ((BALL_Y + BALL_RADIUS >= PADDLE_1Y) && (BALL_Y - BALL_RADIUS <= PADDLE_1Y + PADDLE_HEIGHT)) {
                 BALL_XSPEED = -BALL_XSPEED;
             }
         }
-        // Right Paddle
+
         if ((BALL_X + BALL_RADIUS >= PADDLE_2X) && (BALL_XSPEED > 0)) {
             if ((BALL_Y + BALL_RADIUS >= PADDLE_2Y) && (BALL_Y - BALL_RADIUS <= PADDLE_2Y + PADDLE_HEIGHT)) {
                 BALL_XSPEED = -BALL_XSPEED;
             }
         }
 
-        // Side boundaries (reset ball position)
+
         if (BALL_X + BALL_RADIUS >= rightBoundary) {
             scoreP1++;
             BALL_X = 0.0f;
@@ -264,12 +259,12 @@ void renderLoop(GLFWwindow* window) {
             BALL_XSPEED = -BALL_XSPEED;
             BALL_YSPEED = -BALL_YSPEED;
         }
-        // Top boundary (bounce)
+
         if (BALL_Y + BALL_RADIUS >= topBoundary) {
             BALL_Y = topBoundary - BALL_RADIUS;
             BALL_YSPEED = -BALL_YSPEED;
         }
-        // Bottom boundary (bounce)
+
         if (BALL_Y - BALL_RADIUS <= bottomBoundary) {
             BALL_Y = bottomBoundary + BALL_RADIUS;
             BALL_YSPEED = -BALL_YSPEED;
@@ -283,10 +278,10 @@ void renderLoop(GLFWwindow* window) {
 
         glfwSwapBuffers(window);
         glfwPollEvents();
-        // Limit the frame rate by waiting until the next frame
+
         float elapsedTime = glfwGetTime() - startTime;
         if (elapsedTime < frameTime) {
-            glfwWaitEventsTimeout(frameTime - elapsedTime);  // Wait for the remaining time
+            glfwWaitEventsTimeout(frameTime - elapsedTime);
         }
     }
 }
@@ -296,11 +291,10 @@ int main() {
         return -1;
     }
 
-    // Initialize GLUT for rendering text
     int argc = 1;
     char* argv[1] = {(char*)"Pong"};
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);  // Set display mode for GLUT (for text rendering));
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
 
 
     GLFWwindow* window = glfwGetCurrentContext();
