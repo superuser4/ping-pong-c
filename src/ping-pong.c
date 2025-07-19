@@ -184,8 +184,8 @@ void renderLoop(GLFWwindow* window) {
     float BALL_X = 0.0f;
     float BALL_Y = 0.0f;
 
-    float BALL_XSPEED = 0.0175f;
-    float BALL_YSPEED = 0.0175f;
+    float BALL_XSPEED = 0.0105f;
+    float BALL_YSPEED = 0.0105f;
     const float BALL_RADIUS = 0.025f;
 
 
